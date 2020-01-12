@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'creatDBbdart.dart';
 void main()async {
+  WidgetsFlutterBinding.ensureInitialized();
   createDb();
 }
 
