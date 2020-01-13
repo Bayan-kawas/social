@@ -3,12 +3,19 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:mock_data/mock_data.dart';
 import 'package:collection/collection.dart';
-String names = mockName();
-String posts = mockString(100);
+import 'findDatabase.dart';
+import 'dart:math';
+import 'package:lipsum/lipsum.dart' as lipsum;
+
+String firstName;
+String lastName;
 int i;
+String postContent;
+var randomNum = new Random();
+int randomUserId;
+bool dataSeeded = false;
 
 Future createDb() async {
-  bool dataSeeded = false;
   if (dataSeeded == false) {
     // get a location
     var databasesPath = await getDatabasesPath();
@@ -28,35 +35,39 @@ Future createDb() async {
       await db.execute(
           'CREATE TABLE comment_likes(id INTEGER PRIMARY KEY, user_id INTEGER, comment_id INTEGER)');
     });
+    prefs.setString('database', path);
     // insert some record
     insertData(database);
-//    readDatabase(database);
+    // delete(database);
+    readDatabase(database);
   }
 }
 
 Future insertData(Database database) async {
+  int i;
   for (i = 0; i < 10; i++) {
-    String firstName = mockName();
-    String lastName = mockName();
+    firstName = mockName();
+    lastName = mockName();
+    postContent = lipsum.createParagraph();
+    randomUserId = randomNum.nextInt(11) + 1;
     await database.transaction((txn) async {
       await txn.rawInsert(
           "INSERT INTO users(first_name, last_name) VALUES('$firstName', '$lastName')");
     });
   }
+  for (i = 0; i < 50; i++) {
+    await database.transaction((txn)async{
+      await txn.rawInsert("INSERT INTO posts(content, user_id)VALUES('$postContent', '$randomUserId')");
+    });
+  }
 }
-Future readDatabase(Database database)async{
+
+Future readDatabase(Database database) async {
   List<Map> list = await database.rawQuery('SELECT * FROM users');
-  List<Map> expectedList = [
-  {'id':'id', 'first_name': names, 'last_name':names},
-  {'id':'id', 'first_name': names, 'last_name': names}
-  ];
   print(list);
-  print(expectedList);
-  assert(const DeepCollectionEquality().equals(list, expectedList));//SECOND PROBLEM
+}
 
-// Count the records
- int count = Sqflite
-      .firstIntValue(await database.rawQuery('SELECT COUNT(*) FROM users'));
-  assert(count == 2);
-
+delete(Database database) async {
+  int count = await database.rawDelete('DELETE FROM users WHERE id > 10');
+  assert(count == 1);
 }
