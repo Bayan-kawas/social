@@ -11,8 +11,11 @@ String firstName;
 String lastName;
 int i;
 String postContent;
+String commentContent;
 var randomNum = new Random();
 int randomUserId;
+int randomPostId;
+
 bool dataSeeded = false;
 
 Future createDb() async {
@@ -48,23 +51,38 @@ Future insertData(Database database) async {
   for (i = 0; i < 10; i++) {
     firstName = mockName();
     lastName = mockName();
-    postContent = lipsum.createParagraph();
-    randomUserId = randomNum.nextInt(11) + 1;
+    //insert data into  users table
     await database.transaction((txn) async {
       await txn.rawInsert(
           "INSERT INTO users(first_name, last_name) VALUES('$firstName', '$lastName')");
     });
   }
+  //insert data into posts table
   for (i = 0; i < 50; i++) {
+    postContent = lipsum.createParagraph();
+    randomUserId = randomNum.nextInt(10) + 1;
     await database.transaction((txn)async{
-      await txn.rawInsert("INSERT INTO posts(content, user_id)VALUES('$postContent', '$randomUserId')");
+      await txn.rawInsert("INSERT INTO posts(content, user_id) VALUES('$postContent', '$randomUserId')");
+    });
+  }
+  //insert data into comments table
+  for (int x = 0; x < 10; x++) {
+    commentContent=mockString(20);
+    randomPostId = randomNum.nextInt(50)+1;
+    randomUserId = randomNum.nextInt(10) + 1;
+    await database.transaction((txn)async{
+      await txn.rawInsert("INSERT INTO comments(content, user_id, post_id) VALUES('$commentContent', '$randomUserId','$randomPostId')");
     });
   }
 }
 
 Future readDatabase(Database database) async {
-  List<Map> list = await database.rawQuery('SELECT * FROM users');
-  print(list);
+  List<Map> listUsers = await database.rawQuery('SELECT * FROM users');
+  print(listUsers);
+  List<Map> listPosts= await database.rawQuery('SELECT * FROM posts');
+  print(listPosts);
+  List<Map> listComments= await database.rawQuery('SELECT * FROM comments ');
+  print(listComments);
 }
 
 delete(Database database) async {
