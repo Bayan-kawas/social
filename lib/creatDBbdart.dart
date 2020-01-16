@@ -14,6 +14,7 @@ String commentContent;
 var randomNum = new Random();
 int randomUserId;
 int randomPostId;
+List<Map> listPosts;
 
 Future createDb() async {
   // get a location
@@ -85,7 +86,7 @@ Future insertData(Database database) async {
 Future readDatabase(Database database) async {
   List<Map> listUsers = await database.rawQuery('SELECT * FROM users');
   print(listUsers.length);
-  List<Map> listPosts = await database.rawQuery('SELECT * FROM posts');
+  listPosts = await database.rawQuery('SELECT * FROM posts');
   print(listPosts.length);
   List<Map> listComments = await database.rawQuery('SELECT * FROM comments ');
   print(listComments.length);
