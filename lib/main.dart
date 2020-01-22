@@ -157,13 +157,16 @@ class _PostListsState extends State<PostLists> {
                               children: <Widget>[
                                 Padding(
                                   padding: EdgeInsets.fromLTRB(0, 6, 0, 2),
-                                  child: Text('User Name'),
+                                  child:userName(index),
                                 ),
                                 Padding(
                                   padding: EdgeInsets.all(8),
                                   child: Text('$date'),
                                 ),
                               ],
+                            ),
+                            SizedBox(
+                              width: width*0.1,
                             ),
                             Material(
                               shadowColor: Colors.white30,
@@ -174,11 +177,14 @@ class _PostListsState extends State<PostLists> {
                             ),
                           ],
                         ),
-                        Text("post paragraph"),
+                        Expanded(child: Text('${listPosts[index]['content']}')),
                         Row(
                           children: <Widget>[
                             InkWell(
                               child: Center(child: Text('Comment')),
+                            ),
+                            SizedBox(
+                              width: width*0.1,
                             ),
                             InkWell(
                               child: Center(
@@ -200,4 +206,11 @@ class _PostListsState extends State<PostLists> {
       );
     }
   }
+}
+ Widget userName(int index){
+
+  int userId = listPosts[index]['user_id'];
+  //print(userId);
+  return Text('${listUsers[userId-1]['first_name']}' ' ${listUsers[userId-1]['last_name']}');
+
 }

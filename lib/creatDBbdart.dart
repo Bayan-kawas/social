@@ -15,6 +15,8 @@ var randomNum = new Random();
 int randomUserId;
 int randomPostId;
 List<Map> listPosts;
+List<Map> listUsers;
+List<Map> listComments;
 
 Future createDb() async {
   // get a location
@@ -71,23 +73,14 @@ Future insertData(Database database) async {
       });
     }
   }
-  //insert data into comments table
-  for (int x = 0; x < 10; x++) {
-    commentContent = mockString(20);
-    randomPostId = randomNum.nextInt(50) + 1;
-    randomUserId = randomNum.nextInt(10) + 1;
-    await database.transaction((txn) async {
-      await txn.rawInsert(
-          "INSERT INTO comments(content, user_id, post_id) VALUES('$commentContent', '$randomUserId','$randomPostId')");
-    });
-  }
 }
 
 Future readDatabase(Database database) async {
-  List<Map> listUsers = await database.rawQuery('SELECT * FROM users');
+  listUsers = await database.rawQuery('SELECT * FROM users');
   print(listUsers.length);
   listPosts = await database.rawQuery('SELECT * FROM posts');
   print(listPosts.length);
-  List<Map> listComments = await database.rawQuery('SELECT * FROM comments ');
+  //print(listPosts);
+  listComments = await database.rawQuery('SELECT * FROM comments ');
   print(listComments.length);
 }
