@@ -2,20 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'creatDBbdart.dart';
 import 'package:sqflite/sqflite.dart';
-
+import 'commentsPage.dart';
 var date = DateTime.now();
 const color = const Color(0xfdd835);
 
 void main() async {
+
   WidgetsFlutterBinding.ensureInitialized();
   Database db = await createDb();
   readDatabase(db);
   runApp(
-    MaterialApp(home: MyApp()),
+    MaterialApp(
+      home: MyApp(),
+//        initialRoute:MyApp.id,
+//        routes: {
+//          MyApp.id:(context) => MyApp(),
+//          CommentsPage.id:(context) => CommentsPage(),
+//        },
+    ),
   );
 }
 
 class MyApp extends StatefulWidget {
+  static const String id ="my_app";
   @override
   _MyAppState createState() => _MyAppState();
 }
@@ -30,66 +39,37 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.pink.shade600,
-          title: Center(
-            child: Text(
-              'Simple Social',
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                  fontSize: 25,
-                  fontStyle: FontStyle.italic),
-            ),
+    return Scaffold(
+      backgroundColor: Colors.grey.shade200,
+      appBar: AppBar(
+        backgroundColor: Colors.pink.shade600,
+        title: Center(
+          child: Text(
+            'Simple Social',
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                fontSize: 25,
+                fontStyle: FontStyle.italic),
           ),
         ),
-        /////////
-        body: Column(
+      ),
+      /////////
+      body: SafeArea(
+        child: Column(
           children: [
             Row(
               children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.only(right: 30),
-                  child: Container(
-                    child: FlatButton(
-                      child: Center(
-                        child: Text(
-                          'Home',
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      onPressed: () {},
-                    ),
-                  ),
-                ),
-                Container(
-                  child: FlatButton(
-                    textColor: Colors.white,
-                    color: Colors.tealAccent,
-                    highlightColor: Colors.amberAccent,
-                    // hoverColor: Colors.amberAccent,
-                    child: Center(
-                      child: Text(
-                        'Your Profile',
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    onPressed: () {},
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.all(10),
+                  padding: EdgeInsets.only(top: 10, left: 10, right: 10),
                   child: Container(
                     width: width * 0.7,
                     height: height * 0.12,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(100),
+                      ),
+                    ),
                     child: Card(
                       child: TextFormField(
                         decoration: const InputDecoration(
@@ -157,7 +137,7 @@ class _PostListsState extends State<PostLists> {
                               children: <Widget>[
                                 Padding(
                                   padding: EdgeInsets.fromLTRB(0, 6, 0, 2),
-                                  child:userName(index),
+                                  child: userName(index),
                                 ),
                                 Padding(
                                   padding: EdgeInsets.all(8),
@@ -166,7 +146,7 @@ class _PostListsState extends State<PostLists> {
                               ],
                             ),
                             SizedBox(
-                              width: width*0.1,
+                              width: width * 0.1,
                             ),
                             Material(
                               shadowColor: Colors.white30,
@@ -177,21 +157,63 @@ class _PostListsState extends State<PostLists> {
                             ),
                           ],
                         ),
-                        Expanded(child: Text('${listPosts[index]['content']}')),
-                        Row(
-                          children: <Widget>[
-                            InkWell(
-                              child: Center(child: Text('Comment')),
-                            ),
-                            SizedBox(
-                              width: width*0.1,
-                            ),
-                            InkWell(
-                              child: Center(
-                                child: Text('Like'),
+                        Expanded(child: Padding(
+                            padding: EdgeInsets.all(10),
+                            child: Text('${listPosts[index]['content']}'))),
+                        Padding(
+                          padding: EdgeInsets.only(left: 10, right: 10),
+                          child: Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      border: Border(
+                                    top:
+                                        BorderSide(color: Colors.grey.shade200),
+                                  )),
+                                  child: FlatButton(
+                                    child: Center(
+                                      child: Text('Like'),
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
-                          ],
+                              Expanded(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border(
+                                      top: BorderSide(
+                                          color: Colors.grey.shade200),
+                                    ),
+                                  ),
+                                  child: FlatButton(
+                                    child: Center(child: Text('Comment'),),
+                                    onPressed: (){
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => CommentsPage(index+1)),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border(
+                                      top: BorderSide(
+                                          color: Colors.grey.shade200),
+                                    ),
+                                  ),
+                                  child: FlatButton(
+                                    child: Center(
+                                      child: Text('Share'),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         )
                       ],
                     ),
@@ -202,15 +224,55 @@ class _PostListsState extends State<PostLists> {
       );
     } else {
       return SizedBox(
+        height: 10,
         child: CircularProgressIndicator(),
       );
     }
   }
 }
- Widget userName(int index){
 
+Widget userName(int index) {
   int userId = listPosts[index]['user_id'];
   //print(userId);
-  return Text('${listUsers[userId-1]['first_name']}' ' ${listUsers[userId-1]['last_name']}');
-
+  return Text('${listUsers[userId - 1]['first_name']}'
+      ' ${listUsers[userId - 1]['last_name']}');
 }
+
+//getComments (){
+//
+//}
+//Row(
+//children: <Widget>[
+//Padding(
+//padding: EdgeInsets.only(right: 30),
+//child: Container(
+//child: FlatButton(
+//child: Center(
+//child: Text(
+//'Home',
+//style: TextStyle(
+//fontSize: 20, fontWeight: FontWeight.bold),
+//),
+//),
+//onPressed: () {},
+//),
+//),
+//),
+//Container(
+//child: FlatButton(
+//textColor: Colors.white,
+//color: Colors.tealAccent,
+//highlightColor: Colors.amberAccent,
+//// hoverColor: Colors.amberAccent,
+//child: Center(
+//child: Text(
+//'Your Profile',
+//style: TextStyle(
+//fontSize: 20, fontWeight: FontWeight.bold),
+//),
+//),
+//onPressed: () {},
+//),
+//),
+//],
+//),
