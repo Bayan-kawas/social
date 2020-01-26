@@ -82,5 +82,5 @@ Future readDatabase(Database database) async {
   print(listPosts.length);
   //print(listPosts);
   listComments = await database.rawQuery('SELECT * FROM comments ');
-  print(listComments);
+  print(listComments.length);
 }

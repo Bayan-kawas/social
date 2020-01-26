@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'creatDBbdart.dart';
 List postComments=[];
+int i;
 class CommentsPage extends StatefulWidget {
   static const String id = "comments_page";
    int postId;
@@ -82,15 +83,16 @@ class _CommentsPageState extends State<CommentsPage> {
 }
 
 Widget commentsList(int postId){
+  postComments=[];
   getComment(postId);
   if(postComments[i]!= null){
     return ListView.builder(
       itemCount:postComments.length ,
-      itemBuilder: (BuildContext context,  postId) {
+      itemBuilder: (BuildContext context,  i) {
         return Container(
           child: Card(
             child: Text(
-                '${ postComments[postId]['content']}'
+                '${ postComments[i]['content']}'
             ),
           ),
         );
@@ -100,13 +102,15 @@ Widget commentsList(int postId){
 }
 
 
-getComment(int postId){
-for(int i=0; i < listComments.length; i++) {
+getComment(int postId) {
+  for (i = 0; i < listComments.length; i++) {
+   // print(listComments[i]['post_id']);
 if(postId == listComments[i]['post_id']){
+// print(listComments[i]['content']);
   postComments.add(listComments[i]['content']);
-  print(postComments[i]);
-  return postComments[i];
+}else{
+  return null;
 }
 }
+  //return postComments[i];
 }
-
