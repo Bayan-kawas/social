@@ -84,3 +84,24 @@ Future readDatabase(Database database) async {
   listComments = await database.rawQuery('SELECT * FROM comments ');
   print(listComments.length);
 }
+
+insertNewPost(Database database,String newPost) async{
+  postContent = newPost;
+  randomUserId = randomNum.nextInt(10) + 1;
+  await database.transaction((txn) async {
+    await txn.rawInsert(
+        "INSERT INTO posts(content, user_id) VALUES('$postContent', '$randomUserId')");
+  });
+  listPosts = await database.rawQuery('SELECT * FROM posts');
+  print('insert new post');
+}
+
+insertNewComments(Database database,String newComment) async{
+  randomUserId = randomNum.nextInt(10) + 1;
+  commentContent = newComment;
+  await database.transaction((txn) async {
+    await txn.rawInsert(
+        "INSERT INTO comments(content, user_id, post_id) VALUES('$commentContent', '$randomUserId','${i + 1}')");
+  });
+  listComments = await database.rawQuery('SELECT * FROM comments ');
+}

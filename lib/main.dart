@@ -3,17 +3,18 @@ import 'package:flutter/widgets.dart';
 import 'creatDBbdart.dart';
 import 'package:sqflite/sqflite.dart';
 import 'commentsPage.dart';
+import 'logIn.dart';
 var date = DateTime.now();
 const color = const Color(0xfdd835);
-
+Database db;
 void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
-  Database db = await createDb();
+   db = await createDb();
   readDatabase(db);
   runApp(
     MaterialApp(
-      home: MyApp(),
+      home:MyApp(),
 //        initialRoute:MyApp.id,
 //        routes: {
 //          MyApp.id:(context) => MyApp(),
@@ -30,11 +31,16 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  final myController = TextEditingController();
   @override
   void initState() {
     super.initState();
   }
-
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    myController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -72,6 +78,7 @@ class _MyAppState extends State<MyApp> {
                     ),
                     child: Card(
                       child: TextFormField(
+                        controller: myController,
                         decoration: const InputDecoration(
                           icon: Icon(Icons.person),
                           hintText: 'What are you thinking about ?',
@@ -84,6 +91,9 @@ class _MyAppState extends State<MyApp> {
                 Container(
                   width: width * 0.2,
                   child: RaisedButton(
+                    onPressed:(){
+                      insertNewPost(db,myController.text);
+                    },
                     child: Center(
                       child: Text('Post'),
                     ),
@@ -191,7 +201,7 @@ class _PostListsState extends State<PostLists> {
                                     onPressed: (){
                                       Navigator.push(
                                         context,
-                                        MaterialPageRoute(builder: (context) => CommentsPage(index+1)),
+                                        MaterialPageRoute(builder: (context) => CommentsPage(index + 1)),
                                       );
                                     },
                                   ),
@@ -233,46 +243,7 @@ class _PostListsState extends State<PostLists> {
 
 Widget userName(int index) {
   int userId = listPosts[index]['user_id'];
-  //print(userId);
   return Text('${listUsers[userId - 1]['first_name']}'
       ' ${listUsers[userId - 1]['last_name']}');
 }
 
-//getComments (){
-//
-//}
-//Row(
-//children: <Widget>[
-//Padding(
-//padding: EdgeInsets.only(right: 30),
-//child: Container(
-//child: FlatButton(
-//child: Center(
-//child: Text(
-//'Home',
-//style: TextStyle(
-//fontSize: 20, fontWeight: FontWeight.bold),
-//),
-//),
-//onPressed: () {},
-//),
-//),
-//),
-//Container(
-//child: FlatButton(
-//textColor: Colors.white,
-//color: Colors.tealAccent,
-//highlightColor: Colors.amberAccent,
-//// hoverColor: Colors.amberAccent,
-//child: Center(
-//child: Text(
-//'Your Profile',
-//style: TextStyle(
-//fontSize: 20, fontWeight: FontWeight.bold),
-//),
-//),
-//onPressed: () {},
-//),
-//),
-//],
-//),
