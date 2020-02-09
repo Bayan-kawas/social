@@ -1,20 +1,23 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'creatDBbdart.dart';
 import 'package:sqflite/sqflite.dart';
 import 'commentsPage.dart';
 import 'logIn.dart';
+import 'regiserPage.dart';
+
 var date = DateTime.now();
 const color = const Color(0xfdd835);
 Database db;
-void main() async {
 
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-   db = await createDb();
+  db = await createDb();
   readDatabase(db);
   runApp(
     MaterialApp(
-      home:MyApp(),
+      home: MyApp(),
 //        initialRoute:MyApp.id,
 //        routes: {
 //          MyApp.id:(context) => MyApp(),
@@ -25,22 +28,26 @@ void main() async {
 }
 
 class MyApp extends StatefulWidget {
-  static const String id ="my_app";
+  static const String id = "my_app";
+
   @override
   _MyAppState createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
   final myController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
   }
+
   void dispose() {
     // Clean up the controller when the widget is disposed.
     myController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -91,8 +98,8 @@ class _MyAppState extends State<MyApp> {
                 Container(
                   width: width * 0.2,
                   child: RaisedButton(
-                    onPressed:(){
-                      insertNewPost(db,myController.text);
+                    onPressed: () {
+                      insertNewPost(db, myController.text);
                     },
                     child: Center(
                       child: Text('Post'),
@@ -115,6 +122,8 @@ class PostLists extends StatefulWidget {
 }
 
 class _PostListsState extends State<PostLists> {
+  final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -167,9 +176,10 @@ class _PostListsState extends State<PostLists> {
                             ),
                           ],
                         ),
-                        Expanded(child: Padding(
-                            padding: EdgeInsets.all(10),
-                            child: Text('${listPosts[index]['content']}'))),
+                        Expanded(
+                            child: Padding(
+                                padding: EdgeInsets.all(10),
+                                child: Text('${listPosts[index]['content']}'))),
                         Padding(
                           padding: EdgeInsets.only(left: 10, right: 10),
                           child: Row(
@@ -197,12 +207,26 @@ class _PostListsState extends State<PostLists> {
                                     ),
                                   ),
                                   child: FlatButton(
-                                    child: Center(child: Text('Comment'),),
-                                    onPressed: (){
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(builder: (context) => CommentsPage(index + 1)),
-                                      );
+                                    child: Center(
+                                      child: Text('Comment'),
+                                    ),
+                                    onPressed: () {
+                                      showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return SizedBox.expand(
+                                              child: AlertDialog(
+                                                content: Form(
+                                                  key: _formKey,
+                                                  child: SizedBox.expand(
+
+                                                    child:
+                                                        CommentsPage(index + 1),
+                                                  ),
+                                                ),
+                                              ),
+                                            );
+                                          });
                                     },
                                   ),
                                 ),
@@ -246,4 +270,3 @@ Widget userName(int index) {
   return Text('${listUsers[userId - 1]['first_name']}'
       ' ${listUsers[userId - 1]['last_name']}');
 }
-

@@ -19,7 +19,6 @@ environment:
 dependencies:
   sqflite: ^1.2.0
   mock_data: ^1.2.5
-  shared_preferences: ^0.5.6
   lipsum: ^1.0.1
   flutter:
     sdk: flutter
