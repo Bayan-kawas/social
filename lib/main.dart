@@ -17,7 +17,7 @@ void main() async {
   readDatabase(db);
   runApp(
     MaterialApp(
-      home: MyApp(),
+      home: LogIn(),
 //        initialRoute:MyApp.id,
 //        routes: {
 //          MyApp.id:(context) => MyApp(),
@@ -171,7 +171,10 @@ class _PostListsState extends State<PostLists> {
                               shadowColor: Colors.white30,
                               child: InkWell(
                                 child: Icon(Icons.more_horiz),
-                                onTap: () {},
+                                onTap: () {
+                                  moreOptions(context);
+
+                                },
                               ),
                             ),
                           ],
@@ -211,22 +214,10 @@ class _PostListsState extends State<PostLists> {
                                       child: Text('Comment'),
                                     ),
                                     onPressed: () {
-                                      showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return SizedBox.expand(
-                                              child: AlertDialog(
-                                                content: Form(
-                                                  key: _formKey,
-                                                  child: SizedBox.expand(
-
-                                                    child:
-                                                        CommentsPage(index + 1),
-                                                  ),
-                                                ),
-                                              ),
-                                            );
-                                          });
+                                      Navigator.push(
+                                      context,
+                                        MaterialPageRoute(builder:(context)=>CommentsPage(index+1)),
+                                      );
                                     },
                                   ),
                                 ),
@@ -269,4 +260,72 @@ Widget userName(int index) {
   int userId = listPosts[index]['user_id'];
   return Text('${listUsers[userId - 1]['first_name']}'
       ' ${listUsers[userId - 1]['last_name']}');
+}
+
+Widget moreOptions(context){
+  showDialog(
+     context: context,
+     builder: (BuildContext context) {
+       return Align(
+         alignment: Alignment.topLeft,
+         child: AlertDialog(
+             content : Container(
+                 decoration: BoxDecoration(
+                   borderRadius: BorderRadius.circular(30.0),
+
+                 ),
+                 height: 200,
+                 width: 50,
+                 child: Column(
+                   children: ListTile.divideTiles(
+                       context: context,
+                       tiles: [
+                         ListTile(
+                           title: Text('Save Post',
+                             style: TextStyle(
+                               fontWeight:FontWeight.bold,
+                               fontStyle: FontStyle.italic,
+                             ),
+                           ),
+                           onTap: () {
+                            // Update the state of the app.
+                            // ...
+                           },
+                         ),
+                         ListTile(
+                           title: Text('Copy Link'
+                             ,style: TextStyle(
+                               fontWeight:FontWeight.bold,
+                               fontStyle: FontStyle.italic,
+                             ),
+                           ),
+                           onTap: () {
+                            // Update the state of the app.
+                            // ...
+                           },
+                         ),
+                         ListTile(
+                           title: Text('Hide The Post'
+                             ,style: TextStyle(
+                               fontWeight:FontWeight.bold,
+                               fontStyle: FontStyle.italic,
+                             ),
+                           ),
+                           onTap: () {
+                             // Update the state of the app.
+                             // ...
+                           },
+                         ),
+
+                       ]
+                   ).toList(),
+                 ),
+               ),
+
+         ),
+       );
+     },
+ );
+
+
 }

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:posts/main.dart';
 
 class LogIn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
+        backgroundColor: Colors.grey.shade200,
         appBar: AppBar(
           backgroundColor: Colors.blue,
           title: Center(
@@ -12,47 +14,68 @@ class LogIn extends StatelessWidget {
           ),
         ),
         body: Center(
-          
+          child: Padding(
+            padding: EdgeInsets.all(8),
             child: Container(
+              color: Colors.blue,
               height: 300,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(100),
-                      ),
-                    ),
-                    child: Card(
-                      child: TextFormField(
-                        decoration: const InputDecoration(
-                          hintText: 'Enter You Email or Phone Number ',
+              child: Card(
+                color: Colors.grey.shade100,
+                child: Padding(
+                  padding: EdgeInsets.all(8),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Card(
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 8, right: 8),
+                          child: TextFormField(
+                            decoration: const InputDecoration(
+                              hintText: 'Enter You Email or Phone Number ',
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(100),
+                      SizedBox(
+                        height: 10,
                       ),
-                    ),
-                    child: Card(
-                      child: TextFormField(
-                        decoration: const InputDecoration(
-                          hintText: 'Enter your password',
+                      Card(
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 8, right: 8),
+                          child: TextFormField(
+                            decoration: const InputDecoration(
+                              hintText: 'Enter your password',
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      RaisedButton(
+                        onPressed: () {
+                          Navigator.push(
+                           context,
+                           MaterialPageRoute(builder: (context)=>MyApp()),
+                          );
+                        },
+                        padding:
+                            EdgeInsets.symmetric(vertical: 15, horizontal: 40),
+                        color: Colors.blue.shade100,
+                        child: Text(
+                          'log in',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black54,
+                          ),
+                        ),
+                      )
+                    ],
                   ),
-                  FlatButton(
-                    child: Text('log in'),
-                  )
-                ],
+                ),
               ),
             ),
-
+          ),
         ),
       ),
     );

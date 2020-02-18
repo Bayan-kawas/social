@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'creatDBbdart.dart';
 import 'main.dart';
+
 List postComments = [];
 int index;
 
@@ -17,56 +18,80 @@ class CommentsPage extends StatefulWidget {
 class _CommentsPageState extends State<CommentsPage> {
   final myController = TextEditingController();
   int postId;
+  final _formKey = GlobalKey<FormState>();
 
   _CommentsPageState(this.postId);
-@override
+
+  @override
   void dispose() {
-  myController;
+    myController;
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    return MaterialApp(
-      home: Scaffold(
-        backgroundColor: Colors.grey.shade200,
-        body: SafeArea(
-          child: Padding(
-            padding: EdgeInsets.only(top: 10),
-            child: Column(
-              children: <Widget>[
-                commentsList(postId, height, width),
-                SizedBox(
-                  height: height * 0.02,
-                ),
-                Row(
+    return Scaffold(
+      backgroundColor: Colors.grey.shade200,
+      body: SafeArea(
+        child: AlertDialog(
+          content: Container(
+            decoration: new BoxDecoration(color: Colors.grey.shade200),
+            height: height,
+            width: MediaQuery.of(context).size.width,
+            child: Form(
+              key: _formKey,
+              child: Padding(
+                padding: EdgeInsets.only(top: 10),
+                child: Column(
                   children: <Widget>[
-                    Container(
-                      width: width * 0.9,
-                      height: height * 0.12,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(100),
-                        ),
-                      ),
-                      child: Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                        child: TextFormField(
-                          decoration: const InputDecoration(
-                            icon: Icon(Icons.person),
-                            hintText: 'What are you thinking about ?',
-                            labelText: 'What are you thinking about ?',
+                    commentsList(postId, height, width),
+                    SizedBox(
+                      height: height * 0.02,
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: Container(
+                            width: width * 0.9,
+                            height: height * 0.12,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(100),
+                              ),
+                            ),
+                            child: Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20.0),
+                              ),
+                              child: TextFormField(
+                                controller: myController,
+                                decoration: const InputDecoration(
+                                  hintText: 'What are you thinking about ?',
+                                  labelText: 'What are you thinking about ?',
+                                  icon: Icon(Icons.tag_faces),
+                                ),
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                    Icon(Icons.tag_faces)
+                        InkWell(
+                          onTap: () {
+                            setState(() {
+                              insertNewComments(db, myController.text, postId);
+                            });
+                          },
+                          child: Icon(
+                            Icons.send,
+                            color: Colors.blue,
+                          ),
+                        ),
+                      ],
+                    )
                   ],
-                )
-              ],
+                ),
+              ),
             ),
           ),
         ),
@@ -139,4 +164,16 @@ Widget getUserName(int index) {
   int userId = listComments[index]['user_id'];
   return Text('${listUsers[userId - 1]['first_name']}'
       ' ${listUsers[userId - 1]['last_name']}');
+}
+
+insertNewComments(database, String newComment, int postId) async {
+  randomUserId = randomNum.nextInt(10) + 1;
+  randomPostId = randomNum.nextInt(50) + 1;
+  commentContent = newComment;
+  await database.transaction((txn) async {
+    await txn.rawInsert(
+        "INSERT INTO comments(content, user_id, post_id) VALUES('$commentContent', '$randomUserId','$postId')");
+  });
+  listComments = await database.rawQuery('SELECT * FROM comments ');
+  print('insert newwwwwwwwwwwwwwwwwww comment');
 }
