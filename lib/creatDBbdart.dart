@@ -39,10 +39,14 @@ Future createDb() async {
     await db.execute(
         'CREATE TABLE comment_likes(id INTEGER PRIMARY KEY, user_id INTEGER, comment_id INTEGER)');
     await insertData(db);
+   // await delete(db);
   });
   return database;
 }
-
+Future delete(Database db)async{
+  await db
+      .rawDelete('DELETE FROM posts WHERE id > 50' );
+}
 Future insertData(Database database) async {
   int i;
   for (i = 0; i < 10; i++) {
@@ -86,6 +90,7 @@ Future readDatabase(Database database) async {
 }
 
 insertNewPost(Database database,String newPost) async{
+if(newPost!=null){
   postContent = newPost;
   randomUserId = randomNum.nextInt(10) + 1;
   await database.transaction((txn) async {
@@ -94,5 +99,9 @@ insertNewPost(Database database,String newPost) async{
   });
   listPosts = await database.rawQuery('SELECT * FROM posts');
   print('insert new post');
+   i++;
+}else{
+  return null ;
+}
 }
 
