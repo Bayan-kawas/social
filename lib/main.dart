@@ -54,63 +54,169 @@ class _MyAppState extends State<MyApp> {
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Colors.grey.shade200,
-      appBar: AppBar(
-        backgroundColor: Colors.pink.shade600,
-        title: Center(
-          child: Text(
-            'Simple Social',
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                fontSize: 25,
-                fontStyle: FontStyle.italic),
-          ),
-        ),
-      ),
+//      appBar: AppBar(
+//        backgroundColor: Colors.pink.shade600,
+//        title: Center(
+//          child: Text(
+//            'Simple Social',
+//            style: TextStyle(
+//                fontWeight: FontWeight.bold,
+//                color: Colors.white,
+//                fontSize: 25,
+//                fontStyle: FontStyle.italic),
+//          ),
+//        ),
+//      ),
       /////////
       body: SafeArea(
-        child: Column(
-          children: [
-            Row(
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(top: 10, left: 10, right: 10),
-                  child: Container(
-                    width: width * 0.7,
-                    height: height * 0.12,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(100),
-                      ),
-                    ),
-                    child: Card(
-                      child: TextFormField(
-                        controller: myController,
-                        decoration: const InputDecoration(
-                          icon: Icon(Icons.person),
-                          hintText: 'What are you thinking about ?',
-                          labelText: 'What are you thinking about ?',
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Container(
-                  width: width * 0.2,
-                  child: RaisedButton(
-                    onPressed: () {
-                      insertNewPost(db, myController.text);
-                    },
-                    child: Center(
-                      child: Text('Post'),
-                    ),
-                  ),
-                ),
-              ],
+        child: CustomScrollView(
+          slivers: <Widget>[
+            SliverAppBar(
+              pinned: true ,
+              floating: true,
+              snap:true,
+              expandedHeight: 120.0,
+              flexibleSpace: const FlexibleSpaceBar(
+                centerTitle: true,
+                title: Text('Social'),
+                // background:,
+
+                //ToDo row text faild
+              ),
+              title: Text('faxied social'),
+          actions: <Widget>[
+            IconButton(
+              icon: const Icon(Icons.add_circle),
+              tooltip: 'Add new entry',
+              onPressed: () { /* ... */ },
             ),
-            Expanded(child: PostLists()),
           ],
+
+            ),
+
+            SliverList(
+              delegate: SliverChildBuilderDelegate((context,int index ){
+                return Container(
+                  height: 400,
+                  child: Column(
+                    children: [
+                      Expanded(child: Container(
+                        height: height * 0.4,
+                        child: Card(
+                          child: Column(
+                            children: <Widget>[
+                              Row(
+                                children: <Widget>[
+                                  Padding(
+                                    padding: EdgeInsets.all(8),
+                                    child: CircleAvatar(
+                                      radius: 25,
+                                      backgroundImage: NetworkImage(
+                                          'https://img.pngio.com/personal-png-7-png-image-personal-photo-png-2000_2000.png'),
+                                    ),
+                                  ),
+                                  Column(
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: EdgeInsets.fromLTRB(0, 6, 0, 2),
+                                        child: userName(index),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.all(8),
+                                        child: Text('$date'),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    width: width * 0.1,
+                                  ),
+                                  Material(
+                                    shadowColor: Colors.white30,
+                                    child: InkWell(
+                                      child: Icon(Icons.more_horiz),
+                                      onTap: () {
+                                        moreOptions(context);
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Expanded(
+                                  child: Padding(
+                                      padding: EdgeInsets.all(10),
+                                      child: Text('${listPosts[index]['content']}'))),
+                              Padding(
+                                padding: EdgeInsets.only(left: 10, right: 10),
+                                child: Row(
+                                  children: <Widget>[
+                                    Expanded(
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            border: Border(
+                                              top:
+                                              BorderSide(color: Colors.grey.shade200),
+                                            )),
+                                        child: FlatButton(
+                                          child: Center(
+                                            child: Text('Like'),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          border: Border(
+                                            top: BorderSide(
+                                                color: Colors.grey.shade200),
+                                          ),
+                                        ),
+                                        child: FlatButton(
+                                          child: Center(
+                                            child: Text('Comment'),
+                                          ),
+                                          onPressed: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      CommentsPage(index + 1)),
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          border: Border(
+                                            top: BorderSide(
+                                                color: Colors.grey.shade200),
+                                          ),
+                                        ),
+                                        child: FlatButton(
+                                          child: Center(
+                                            child: Text('Share'),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),),
+                    ],
+                  ),
+                );
+              }),
+            ),
+          ],
+
         ),
+
       ),
     );
   }
@@ -329,3 +435,42 @@ Widget moreOptions(context){
 
 
 }
+
+
+//Row(
+//              children: <Widget>[
+//                Padding(
+//                  padding: EdgeInsets.only(top: 10, left: 10, right: 10),
+//                  child: Container(
+//                    width: width * 0.7,
+//                    height: height * 0.12,
+//                    decoration: BoxDecoration(
+//                      borderRadius: BorderRadius.all(
+//                        Radius.circular(100),
+//                      ),
+//                    ),
+//                    child: Card(
+//                      child: TextFormField(
+//                        controller: myController,
+//                        decoration: const InputDecoration(
+//                          icon: Icon(Icons.person),
+//                          hintText: 'What are you thinking about ?',
+//                          labelText: 'What are you thinking about ?',
+//                        ),
+//                      ),
+//                    ),
+//                  ),
+//                ),
+//                Container(
+//                  width: width * 0.2,
+//                  child: RaisedButton(
+//                    onPressed: () {
+//                      insertNewPost(db, myController.text);
+//                    },
+//                    child: Center(
+//                      child: Text('Post'),
+//                    ),
+//                  ),
+//                ),
+//              ],
+//            ),
