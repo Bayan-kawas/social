@@ -61,7 +61,7 @@ class _MyAppState extends State<MyApp> {
         child: CustomScrollView(
           slivers: <Widget>[
             SliverAppBar(
-              expandedHeight: 200.0,
+              expandedHeight: 150.0,
               floating: false,
               pinned: true,
               title: Center(child: Text('app bar')),
@@ -234,7 +234,7 @@ class _MyAppState extends State<MyApp> {
                   ),
                 );
                 }
-                return Container();
+                return null;
               }),
             ),
           ],
