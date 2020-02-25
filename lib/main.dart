@@ -57,190 +57,199 @@ class _MyAppState extends State<MyApp> {
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Colors.grey.shade200,
-      body: SafeArea(
+      body:SafeArea(
         child: CustomScrollView(
           slivers: <Widget>[
-            SliverAppBar(
-              expandedHeight: 150.0,
-              floating: false,
-              pinned: true,
-              title: Center(child: Text('app bar')),
-              flexibleSpace: const FlexibleSpaceBar(
-                centerTitle: false,
-                title: Text('Social'),
-              ),
-              actions: <Widget>[
-                IconButton(
-                  icon: const Icon(Icons.add_circle),
-                  tooltip: 'Add new entry',
-                  onPressed: () {
-                    /* ... */
-                  },
+              SliverAppBar(
+                expandedHeight: 200.0,
+                floating: true,
+                snap: true,
+                pinned: true,
+                title: Center(child: Text('app bar')),
+                flexibleSpace: Stack(
+                  children: <Widget>[
+                    Positioned.fill(
+                        child: Image.network(
+                          "https://images.pexels.com/photos/754082/pexels-photo-754082.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+                          fit: BoxFit.cover,
+                        ),),
+                  ],
                 ),
-              ],
-            ),
-            SliverList(
-              delegate: SliverChildListDelegate(
-                [
-                  Row(
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(top: 10, left: 10, right: 10),
-                        child: Container(
-                          width: width * 0.7,
-                          height: height * 0.12,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(100),
-                            ),
-                          ),
-                          child: Card(
-                            child: TextFormField(
-                              controller: myController,
-                              decoration: const InputDecoration(
-                                icon: Icon(Icons.person),
-                                hintText: 'What are you thinking about ?',
-                                labelText: 'What are you thinking about ?',
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        width: width * 0.2,
-                        child: RaisedButton(
-                          onPressed: () {
-                            insertNewPost(db, myController.text);
-                          },
-                          child: Center(
-                            child: Text('Post'),
-                          ),
-                        ),
-                      ),
-                    ],
+                actions: <Widget>[
+                  IconButton(
+                    icon: const Icon(Icons.add_circle),
+                    tooltip: 'Add new entry',
+                    onPressed: () {
+                      /* ... */
+                    },
                   ),
-                ]
+                ],
               ),
-            ),
-            SliverList(
-              delegate: SliverChildBuilderDelegate((context, int index) {
-                if(listPosts.length > index){
-                  return Container(
-                  height: height * 0.4,
-                  child: Card(
-                    child: Column(
-                      children: <Widget>[
-                        Row(
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.all(8),
-                              child: CircleAvatar(
-                                radius: 25,
-                                backgroundImage: NetworkImage(
-                                    'https://img.pngio.com/personal-png-7-png-image-personal-photo-png-2000_2000.png'),
+              SliverList(
+                delegate: SliverChildListDelegate(
+                    [
+                      Row(
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.only(
+                                top: 10, left: 10, right: 10),
+                            child: Container(
+                              width: width * 0.7,
+                              height: height * 0.12,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(100),
+                                ),
+                              ),
+                              child: Card(
+                                child: TextFormField(
+                                  controller: myController,
+                                  decoration: const InputDecoration(
+                                    icon: Icon(Icons.person),
+                                    hintText: 'What are you thinking about ?',
+                                    labelText: 'What are you thinking about ?',
+                                  ),
+                                ),
                               ),
                             ),
-                            Column(
+                          ),
+                          Container(
+                            width: width * 0.2,
+                            child: RaisedButton(
+                              onPressed: () {
+                                insertNewPost(db, myController.text);
+                              },
+                              child: Center(
+                                child: Text('Post'),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ]
+                ),
+              ),
+              SliverList(
+                delegate: SliverChildBuilderDelegate((context, int index) {
+                  if (listPosts.length > index) {
+                    return Container(
+                      height: height * 0.4,
+                      child: Card(
+                        child: Column(
+                          children: <Widget>[
+                            Row(
                               children: <Widget>[
                                 Padding(
-                                  padding: EdgeInsets.fromLTRB(0, 6, 0, 2),
-                                  child: userName(index),
-                                ),
-                                Padding(
                                   padding: EdgeInsets.all(8),
-                                  child: Text('$date'),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              width: width * 0.1,
-                            ),
-                            Material(
-                              shadowColor: Colors.white30,
-                              child: InkWell(
-                                child: Icon(Icons.more_horiz),
-                                onTap: () {
-                                  moreOptions(context);
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                        Expanded(
-                            child: Padding(
-                                padding: EdgeInsets.all(10),
-                                child: Text('${listPosts[index]['content']}'))),
-                        Padding(
-                          padding: EdgeInsets.only(left: 10, right: 10),
-                          child: Row(
-                            children: <Widget>[
-                              Expanded(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      border: Border(
-                                        top:
-                                        BorderSide(color: Colors.grey.shade200),
-                                      )),
-                                  child: FlatButton(
-                                    child: Center(
-                                      child: Text('Like'),
-                                    ),
+                                  child: CircleAvatar(
+                                    radius: 25,
+                                    backgroundImage: NetworkImage(
+                                        'https://img.pngio.com/personal-png-7-png-image-personal-photo-png-2000_2000.png'),
                                   ),
                                 ),
-                              ),
-                              Expanded(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    border: Border(
-                                      top: BorderSide(
-                                          color: Colors.grey.shade200),
+                                Column(
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: EdgeInsets.fromLTRB(0, 6, 0, 2),
+                                      child: userName(index),
                                     ),
-                                  ),
-                                  child: FlatButton(
-                                    child: Center(
-                                      child: Text('Comment'),
+                                    Padding(
+                                      padding: EdgeInsets.all(8),
+                                      child: Text('$date'),
                                     ),
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                CommentsPage(index + 1)),
-                                      );
+                                  ],
+                                ),
+                                SizedBox(
+                                  width: width * 0.1,
+                                ),
+                                Material(
+                                  shadowColor: Colors.white30,
+                                  child: InkWell(
+                                    child: Icon(Icons.more_horiz),
+                                    onTap: () {
+                                      moreOptions(context);
                                     },
                                   ),
                                 ),
-                              ),
-                              Expanded(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    border: Border(
-                                      top: BorderSide(
-                                          color: Colors.grey.shade200),
+                              ],
+                            ),
+                            Expanded(
+                                child: Padding(
+                                    padding: EdgeInsets.all(10),
+                                    child: Text(
+                                        '${listPosts[index]['content']}'))),
+                            Padding(
+                              padding: EdgeInsets.only(left: 10, right: 10),
+                              child: Row(
+                                children: <Widget>[
+                                  Expanded(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          border: Border(
+                                            top:
+                                            BorderSide(
+                                                color: Colors.grey.shade200),
+                                          )),
+                                      child: FlatButton(
+                                        child: Center(
+                                          child: Text('Like'),
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                  child: FlatButton(
-                                    child: Center(
-                                      child: Text('Share'),
+                                  Expanded(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        border: Border(
+                                          top: BorderSide(
+                                              color: Colors.grey.shade200),
+                                        ),
+                                      ),
+                                      child: FlatButton(
+                                        child: Center(
+                                          child: Text('Comment'),
+                                        ),
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    CommentsPage(index + 1)),
+                                          );
+                                        },
+                                      ),
                                     ),
                                   ),
-                                ),
+                                  Expanded(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        border: Border(
+                                          top: BorderSide(
+                                              color: Colors.grey.shade200),
+                                        ),
+                                      ),
+                                      child: FlatButton(
+                                        child: Center(
+                                          child: Text('Share'),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                );
-                }
-                return null;
-              }),
-            ),
-          ],
-        ),
+                            )
+                          ],
+                        ),
+                      ),
+                    );
+                  }
+                  return null;
+                }),
+              ),
+            ],
+          ),
       ),
-    );
+      );
   }
 }
 
